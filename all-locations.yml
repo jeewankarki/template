@@ -5,8 +5,8 @@ metadata:
   description: A collection of all catalog items
 spec:
   targets:
-    - ./templates/python-microservice-template.yml
-    - ./templates/android-app-template.yml
-    - ./templates/angular-spa-template.yml
-    - ./templates/dot-net-microservice-template.yml
-    - ./templates/ios-app-template.yml
+    - ./python-microservice-template.yml
+    - ./android-app-template.yml
+    - ./angular-spa-template.yml
+    - ./dot-net-microservice-template.yml
+    - ./ios-app-template.yml
