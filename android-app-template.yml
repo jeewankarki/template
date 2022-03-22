@@ -1,0 +1,135 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: android-app-template
+  title: Android app template
+  description: Software template for generating an Android application
+  tags: 
+    - recommended
+    - android
+    - android-app
+    - apk
+spec:
+  owner: shailahir-dev-group
+  type: service
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Create new project
+      required:
+        - name
+        - packageName
+        - projectLanguage
+        - minSDK
+      properties:
+        name:
+          title: Application Name
+          type: string
+          description: Name of the application
+          ui:autofocus: true
+        packageName:
+          title: Package Name
+          type: string
+          description: Name of the application package (com.mycompany.department.capability.app)
+          default: com.shailahir.apps.appName
+          ui:autofocus: true 
+        projectLanguage:
+          title: Project programming language
+          type: string
+          description: Choose programming language
+          ui:autofocus: true
+          ui:widget: select
+          default: Kotlin
+          enum:
+            - Java
+            - Kotlin
+        minSDK:
+          title: Minimum SDK support
+          type: number
+          description: Choose lowest version of android you want your app to support
+          ui:autofocus: true
+          ui:widget: select
+          default: 25
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
+            - 11
+            - 12
+            - 13
+            - 14
+            - 15
+            - 16
+            - 17
+            - 18
+            - 19
+            - 20
+            - 21
+            - 22
+            - 23
+            - 24
+            - 25
+            - 26
+            - 27
+            - 28
+            - 29
+            - 30
+            - 31
+            - 32       
+    - title: Select Dependencies
+      properties:
+        dependencyPicker:
+          title: Search for Dependencies
+          type: string
+          ui:autofocus: true
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./template
+        values:
+          name: ${{ parameters.name }}
+
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./community
+        url: https://github.com/backstage/community/tree/main/backstage-community-sessions
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ["github.com"]
+        description: This is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
