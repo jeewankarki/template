@@ -10,5 +10,5 @@ spec:
     - ./angular-spa-template.yml
     - ./dot-net-microservice-template.yml
     - ./ios-app-template.yml
-    - ./emo-for-custom-action-template.yml
+    - ./demo-for-custom-action-template.yml
     
