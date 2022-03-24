@@ -2,11 +2,15 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
-  name: Test for custom action
-  title: Test Action template
-  description: scaffolder v1beta3 template demo
+  name: demo-for-custom-action
+  title: custom action
+  description: Software template for generating an iOS application
+  tags: 
+    - recommended
+    - ios
+    - ios-app
 spec:
-  owner: backstage/techdocs-core
+  owner: jeewan-karki-dev-group
   type: service
 
   # these are the steps which are rendered in the frontend with the form input
@@ -55,7 +59,7 @@ spec:
       name: Publish
       action: publish:github
       input:
-        allowedHosts: ['github.com']
+        allowedHosts: ["github.com"]
         description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
 
@@ -64,16 +68,4 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
-Template Entity contains more information about the required fields.
-
-Once we have a template.yaml ready, we can then add it to the software catalog for use by the scaffolder.
-
-You can add the template files to the catalog through static location configuration, for example:
-
-catalog:
-  locations:
-    - type: url
-      target: https://github.com/backstage/software-templates/blob/main/scaffolder-templates/react-ssr-template/template.yaml
-      rules:
-        - allow: [Template]
+        catalogInfoPath: "/catalog-info.yaml"
