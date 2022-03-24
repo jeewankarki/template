@@ -4,8 +4,7 @@ metadata:
   name: all-catalog-info-ymls
   description: A collection of all catalog items
 spec:
-  targets:
-    - ./python-microservice-template.yml
+  targets:    
     - ./android-app-template.yml
     - ./angular-spa-template.yml
     - ./dot-net-microservice-template.yml
