@@ -10,4 +10,4 @@ spec:
     - ./angular-spa-template.yml
     - ./dot-net-microservice-template.yml
     - ./ios-app-template.yml
-    - ./demo-for-custom-action-template.yaml
+    
