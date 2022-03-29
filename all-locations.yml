@@ -11,4 +11,5 @@ spec:
     - ./dot-net-microservice-template.yml
     - ./ios-app-template.yml
     - ./demo-for-custom-action-template.yml
+    - ./springboot-template.yml
     
