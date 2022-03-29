@@ -27,7 +27,8 @@ spec:
           ui:autofocus: true
         
     - title: Choose a location
-      ChooseLocation:
+      properties:
+       ChooseLocation:
           title: Target
           type: string
           description: Choose a location
@@ -38,7 +39,7 @@ spec:
             - github.com
             - Azure.com
 
-      DestinationRepository:
+       DestinationRepository:
           title: Destination repository 
           type: string
           description: Destination repository
@@ -50,7 +51,7 @@ spec:
             - internal
             - Uat
             - Prod
-      ProjectRepoName:
+       ProjectRepoName:
           title: Project Repo Name
           type: string
           description: Project Repo Name
