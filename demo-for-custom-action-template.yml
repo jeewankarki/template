@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
-  name: Custom template
+  name: demo-for-custom-action-template
   title: Custom template
   description: Custom template for generating an Android application
   tags: 
