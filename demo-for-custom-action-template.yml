@@ -28,6 +28,14 @@ spec:
         
     - title: Choose a location
       properties:
+      repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+              - azure.com
        ChooseLocation:
           title: Target
           type: string
