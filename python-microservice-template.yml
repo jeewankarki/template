@@ -17,8 +17,7 @@ spec:
   parameters:
     - title: Create new project
       required:
-        - name
-        - version
+        - name        
       properties:
         name:
           title: Name
