@@ -28,13 +28,7 @@ spec:
           ui:options:
             rows: 5
 
-        version:
-          title: Version
-          type: string
-          description: Package version for the project
-          ui:autofocus: true
-          ui:options:
-            rows: 5
+        
 
         description:
           title: Description
@@ -44,13 +38,7 @@ spec:
           ui:options:
             rows: 5
 
-        keywords:
-          title: Keywords
-          type: string
-          description: Keywords for the project
-          ui:autofocus: true
-          ui:options:
-            rows: 5
+        
 
     - title: Choose a location
       required:
