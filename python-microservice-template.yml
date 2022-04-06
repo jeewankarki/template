@@ -15,17 +15,43 @@ spec:
 
   # these are the steps which are rendered in the frontend with the form input
   parameters:
-    - title: Fill in some steps
+    - title: Create new project
       required:
         - name
+        - version
       properties:
         name:
           title: Name
           type: string
-          description: Unique name of the component
+          description: Unique name of the project
           ui:autofocus: true
           ui:options:
             rows: 5
+
+        version:
+          title: Version
+          type: string
+          description: Package version for the project
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
+        description:
+          title: Description
+          type: string
+          description: Brief description of the project
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
+        keywords:
+          title: Keywords
+          type: string
+          description: Keywords for the project
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
     - title: Choose a location
       required:
         - repoUrl
@@ -33,10 +59,18 @@ spec:
         repoUrl:
           title: Repository Location
           type: string
-          ui:field: RepoUrlPicker
+          ui:field: DevxRepoUrlPicker
           ui:options:
             allowedHosts:
+              - dev.azure.com
               - github.com
+            # requestUserCredentials:
+            #   secretsKey: GITHUB_USER_OAUTH_TOKEN
+            #   additionalScopes: 
+            #     github: 
+            #       - repo
+            #       - user
+            #       - read:org
 
   # here's the steps that are executed in series in the scaffolder backend
   steps:
@@ -52,20 +86,48 @@ spec:
       name: Fetch Docs
       action: fetch:plain
       input:
-        targetPath: ./community
-        url: https://github.com/backstage/community/tree/main/backstage-community-sessions
+        targetPath: ./scaffold
+        url: https://github.com/shailendra-ahir-cbre/test-templates
 
-    - id: publish
-      name: Publish
+    # - id: mycompany:create-file
+    #   name: Create File Custom action
+    #   action: mycompany:create-file
+    #   input:
+    #     contents: Write this content
+    #     filename: write-this-file-name.txt
+
+    - id: publish-github
+      name: Publish To Github
+      if: ${{ parameters.repoUrl.host === "github.com" }}
       action: publish:github
       input:
         allowedHosts: ["github.com"]
         description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
+        # access: "";
+        defaultBranch: "main"
+        # sourcePath: ""
+        #requireCodeOwnerReviews?: true
+        repoVisibility: 'private'
+        # collaborators: 
+        token: ${{ secrets.GITHUB_USER_OAUTH_TOKEN }}
+        # topics: 
 
-    - id: register
-      name: Register
-      action: catalog:register
+    - id: publish-azure
+      name: Publish To Azure Devops
+     # if: ${{ parameters.repoUrl.host === "dev.azure.com" }}
+      action: publish:azure
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
+        allowedHosts: ["dev.azure.com"]
+        repoUrl: ${{ parameters.repoUrl }}
+        description: ${{ parameters.name }}
+        defaultBranch: "main"
+        # sourcePath: "."
+        token: ${{ secrets.AZURE_USER_OAUTH_TOKEN }}
+
+    # - id: register
+    #   name: Register
+    #   action: catalog:register
+    #   input:
+    #     repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+    #     catalogInfoPath: "/catalog-info.yaml"
