@@ -3,8 +3,7 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: python-microservice-template
-  title: Python microservice template
-  id:python
+  title: Python microservice template  
   description: Software template for generating the new microservice project using python.
   tags: 
     - recommended
