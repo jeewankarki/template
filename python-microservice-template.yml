@@ -3,21 +3,21 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: python-microservice-template
-  title: Python microservice template  
+  title: Python microservice template
   description: Software template for generating the new microservice project using python.
   tags: 
     - recommended
     - python-microservice
     - python
 spec:
-  owner: shailahir-dev-group
+  owner: cbre
   type: service
 
   # these are the steps which are rendered in the frontend with the form input
   parameters:
     - title: Create new project
       required:
-        - name        
+        - name
       properties:
         name:
           title: Name
@@ -27,8 +27,6 @@ spec:
           ui:options:
             rows: 5
 
-        
-
         description:
           title: Description
           type: string
@@ -36,8 +34,6 @@ spec:
           ui:autofocus: true
           ui:options:
             rows: 5
-
-        
 
     - title: Choose a location
       required:
@@ -51,70 +47,54 @@ spec:
             allowedHosts:
               - dev.azure.com
               - github.com
-            # requestUserCredentials:
-            #   secretsKey: GITHUB_USER_OAUTH_TOKEN
-            #   additionalScopes: 
-            #     github: 
-            #       - repo
-            #       - user
-            #       - read:org
-
+            requestUserCredentials:
+              secretsKey: USER_OAUTH_TOKEN
+              additionalScopes: 
+                github: 
+                  - repo
+                  - user
+                  - read:org
+              
   # here's the steps that are executed in series in the scaffolder backend
   steps:
     - id: fetch-base
-      name: Fetch Base
+      name: Fetch template & Base project 
       action: fetch:template
       input:
-        url: ./template
+        url: ./scaffold
         values:
           name: ${{ parameters.name }}
 
-    - id: fetch-docs
-      name: Fetch Docs
-      action: fetch:plain
-      input:
-        targetPath: ./scaffold
-        url: https://github.com/shailendra-ahir-cbre/test-templates
-
-    # - id: mycompany:create-file
-    #   name: Create File Custom action
-    #   action: mycompany:create-file
-    #   input:
-    #     contents: Write this content
-    #     filename: write-this-file-name.txt
-
     - id: publish-github
-      name: Publish To Github
-      if: ${{ parameters.repoUrl.host === "github.com" }}
+      name: Publish to GitHub Organization
+      if: ${{ parameters.repoUrl.indexOf("github.com") == 0 }}
       action: publish:github
       input:
         allowedHosts: ["github.com"]
-        description: This is ${{ parameters.name }}
+        description: ${{ parameters.description }}
         repoUrl: ${{ parameters.repoUrl }}
-        # access: "";
         defaultBranch: "main"
-        # sourcePath: ""
-        #requireCodeOwnerReviews?: true
-        repoVisibility: 'private'
-        # collaborators: 
-        token: ${{ secrets.GITHUB_USER_OAUTH_TOKEN }}
-        # topics: 
+        token: ${{ secrets.USER_OAUTH_TOKEN }}
 
     - id: publish-azure
       name: Publish To Azure Devops
-     # if: ${{ parameters.repoUrl.host === "dev.azure.com" }}
+      if: ${{ parameters.repoUrl.indexOf("dev.azure.com") == 0 }}
       action: publish:azure
       input:
         allowedHosts: ["dev.azure.com"]
         repoUrl: ${{ parameters.repoUrl }}
         description: ${{ parameters.name }}
         defaultBranch: "main"
-        # sourcePath: "."
-        token: ${{ secrets.AZURE_USER_OAUTH_TOKEN }}
+        token: ${{ secrets.USER_OAUTH_TOKEN }}
 
-    # - id: register
-    #   name: Register
-    #   action: catalog:register
-    #   input:
-    #     repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-    #     catalogInfoPath: "/catalog-info.yaml"
+    - id: collect-analytics-data
+      name: Collect Analytics
+      action: devx:template-analytics
+      input:
+        templateName: 'python-microservice-template'
+        projectSourceLocation: './scaffold'
+        username: 'test-user'
+        repoType: ${{ parameters.repoUrl }}
+        finalRepoLocation: ${{ '' + parameters.repoUrl.indexOf("dev.azure.com") == 0 ? steps['publish-azure'].output.repoContentsUrl: steps['publish-github'].output.repoContentsUrl }}
+  
+  
